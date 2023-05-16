@@ -32,18 +32,18 @@ export function queryTeacher(params) {
   })
 }
 
-export function deleteTeacher(params) {
+export function deleteTeacher(data) {
   return request({
     url: '/teacher/delete',
     method: 'delete',
-    params
+    data
   })
 }
 
-export function updateTeacher(params) {
+export function updateTeacher(data) {
   return request({
     url: '/teacher/update',
     method: 'put',
-    params
+    data
   })
 }

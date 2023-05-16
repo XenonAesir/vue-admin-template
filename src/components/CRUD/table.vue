@@ -1,8 +1,10 @@
 <template>
   <div class="table-box" ref="tableBox">
-    <el-table v-loading="listLoading" :data="list.filter(data => !search || data.name.includes(search))"
+    <!-- <el-button @click="clearFilter">清除所有过滤器</el-button> -->
+    <el-table v-loading="listLoading" :data="localList.filter(data => !search || data.name.includes(search))"
       element-loading-text="Loading" border fit highlight-current-row :default-sort="{ prop: 'name', order: 'ascending' }"
-      v-if="tableHeight" :max-height="tableHeight + 'px'">
+      v-if="tableHeight" :max-height="tableHeight + 'px'"
+      ref="filterTable">
       <el-table-column prop="ID" align="center" label="序号" width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
@@ -36,20 +38,20 @@
       </el-table-column>
       <el-table-column align="right" width="400">
         <template slot="header" slot-scope="scope">
-          <el-input v-model="search" label="操作列表" size="mini" placeholder="输入姓名当页搜索" :search-method="handleSearch" />
+          <el-input v-model="search" label="操作列表" size="mini" placeholder="输入姓名当页搜索"/>
         </template>
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
+          <el-button plain size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
 
           <el-popover placement="top" width="160" :ref="`popover1-${scope.$index}`">
-            <p>这是一段内容这是一段内容确定删除吗？</p>
+            <p>确定删除此条信息吗</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text"
+              <el-button plain size="mini"
                 @click="scope._self.$refs[`popover1-${scope.$index}`].doClose()">取消</el-button>
-              <el-button type="primary" size="mini"
+              <el-button plain type="primary" size="mini"
                 @click="scope._self.$refs[`popover1-${scope.$index}`].doClose(), handleDelete(scope.$index, scope.row)">确定</el-button>
             </div>
-            <el-button size="mini" type="danger" slot="reference" style="margin-left:10px;">删除</el-button>
+            <el-button plain size="mini" type="danger" slot="reference" style="margin-left:10px;">删除</el-button>
           </el-popover>
 
 
@@ -87,7 +89,8 @@ export default {
     return {
       listLoading: true,
       search: null,
-      tableHeight: 0
+      tableHeight: 0,
+      localList: [] // 新增本地的 data 属性
     }
   },
   created() {
@@ -101,7 +104,7 @@ export default {
     fetchData() {
       this.listLoading = true
       getList().then(response => {
-        this.list = response.data.data
+        this.localList = response.data.data
         this.listLoading = false
       })
     },
@@ -109,8 +112,13 @@ export default {
       console.log(index, row)
     },
     handleDelete(index, row) {
-      // console.log(index, row)
-      console.log(row.id)
+      deleteTeacher(row).then(response => {
+        this.$message({
+          message: '成功删除了' + row.major + '教师' + row.name + '的信息',
+          type: 'success'
+        })
+        this.fetchData()
+      })
 
     },
     filterSex(value, row) {
@@ -128,6 +136,9 @@ export default {
           return row.major === '微机' || row.major === '体育'
       }
     },
+    clearFilter() {
+      this.$refs.filterTable.clearFilter();
+    },
     handleCurrentChange(val) {
       this.fetchData({
         page: val
@@ -138,7 +149,7 @@ export default {
     list(newValue) {
       // 数据更新时调用updateData方法更新表格数据
       // this.updateList(newValue);
-      this.list = newValue
+      this.localList = newValue
     }
   }
 

@@ -35,8 +35,9 @@
             </el-form>
 
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false" size="medium">取 消</el-button>
-                <el-button type="primary" @click="onSubmit" size="medium">提 交</el-button>
+                <el-button plain @click="setUnVisable(), resetForm('form')" size="medium">取 消</el-button>
+                <el-button plain type="info" @click="resetForm('form')" size="medium">重 置</el-button>
+                <el-button plain type="primary" @click="onSubmit" size="medium">提 交</el-button>
             </div>
         </el-dialog>
     </div>
@@ -67,6 +68,7 @@ export default {
     data() {
         return {
             form: {
+                // 不可使用null作为初始值
                 name: '',
                 sex: '',
                 age: '',
@@ -84,10 +86,6 @@ export default {
                     if (this.validForm('form')) {
                         this.submitHandler(this.form)
                     }
-                    else {
-                        alert('error!');
-                    }
-
                 } else {
                     // 不使用验证规则
                     this.submitHandler(this.form);
@@ -104,13 +102,16 @@ export default {
         validForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('submit!');
+                    // alert('submit!');
+                    return true
                 } else {
-                    console.log('error submit!!');
-                    return false;
+                    return false
                 }
             })
         },
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        }
     },
 
 }
