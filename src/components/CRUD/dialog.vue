@@ -1,24 +1,23 @@
 <template>
     <div>
         <el-dialog :title="title" :visible.sync="dialogFormVisible">
-            <el-form ref="form" :model="form" label-width="80px">
-                <el-form-item label="教师姓名">
-                    <el-input v-model="form.name"></el-input>
+            <el-form ref="form" :model="form" label-width="80px" :rules="rules">
+                <el-form-item label="教师姓名" prop="name">
+                    <el-input v-model.trim="form.name" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="教师性别">
+
+                <el-form-item label="教师性别" prop="sex">
                     <el-radio-group v-model="form.sex">
                         <el-radio label="男"></el-radio>
                         <el-radio label="女"></el-radio>
                     </el-radio-group>
                 </el-form-item>
 
-                <el-form-item label="年龄" prop="age" :rules="[
-                    { type: 'number', message: '年龄必须为数字值' }
-                ]">
+                <el-form-item label="年龄" prop="age">
                     <el-input v-model.number="form.age" autocomplete="off"></el-input>
                 </el-form-item>
 
-                <el-form-item label="所授科目">
+                <el-form-item label="所授科目" prop="major">
                     <el-select v-model="form.major" placeholder="请选择所授科目">
                         <el-option label="数学" value="数学"></el-option>
                         <el-option label="语文" value="语文"></el-option>
@@ -55,6 +54,14 @@ export default {
         submitHandler: {
             type: Function,
             required: true
+        },
+        needValidForm: {
+            type: Boolean,
+            default: false
+        },
+        rules: {
+            type: Object,
+            default: null
         }
     },
     data() {
@@ -65,15 +72,26 @@ export default {
                 age: '',
                 major: ''
             },
-            dialogFormVisible: false
+            dialogFormVisible: false,
+
         }
     },
     methods: {
         onSubmit() {
-            // 在提交表单时调用传入的 submitHandler 方法
             if (this.submitHandler) {
-                this.submitHandler(this.form);
-                // console.log(this.submitHandler)
+                if (this.needValidForm) {
+                    // 使用验证规则
+                    if (this.validForm('form')) {
+                        this.submitHandler(this.form)
+                    }
+                    else {
+                        alert('error!');
+                    }
+
+                } else {
+                    // 不使用验证规则
+                    this.submitHandler(this.form);
+                }
             }
             // 其他处理逻辑...
         },
@@ -82,7 +100,18 @@ export default {
         },
         setUnVisable() {
             this.dialogFormVisible = false
-        }
-    }
+        },
+        validForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    alert('submit!');
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            })
+        },
+    },
+
 }
 </script>

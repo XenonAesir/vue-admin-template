@@ -19,7 +19,7 @@ export function getList(params) {
 export function insertTeacher(data) {
   return request({
     url: '/teacher/insert',
-    method: 'put',
+    method: 'post',
     data
   })
 }
@@ -28,6 +28,22 @@ export function queryTeacher(params) {
   return request({
     url: '/teacher/query',
     method: 'get',
+    params
+  })
+}
+
+export function deleteTeacher(params) {
+  return request({
+    url: '/teacher/delete',
+    method: 'delete',
+    params
+  })
+}
+
+export function updateTeacher(params) {
+  return request({
+    url: '/teacher/update',
+    method: 'put',
     params
   })
 }

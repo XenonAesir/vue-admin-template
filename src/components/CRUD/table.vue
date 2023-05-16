@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="table-box" ref="tableBox">
     <el-table v-loading="listLoading" :data="list.filter(data => !search || data.name.includes(search))"
-      element-loading-text="Loading" border fit highlight-current-row
-      :default-sort="{ prop: 'name', order: 'ascending' }">
+      element-loading-text="Loading" border fit highlight-current-row :default-sort="{ prop: 'name', order: 'ascending' }"
+      v-if="tableHeight" :max-height="tableHeight + 'px'">
       <el-table-column prop="ID" align="center" label="序号" width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
@@ -39,8 +39,20 @@
           <el-input v-model="search" label="操作列表" size="mini" placeholder="输入姓名当页搜索" :search-method="handleSearch" />
         </template>
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
+
+          <el-popover placement="top" width="160" :ref="`popover1-${scope.$index}`">
+            <p>这是一段内容这是一段内容确定删除吗？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text"
+                @click="scope._self.$refs[`popover1-${scope.$index}`].doClose()">取消</el-button>
+              <el-button type="primary" size="mini"
+                @click="scope._self.$refs[`popover1-${scope.$index}`].doClose(), handleDelete(scope.$index, scope.row)">确定</el-button>
+            </div>
+            <el-button size="mini" type="danger" slot="reference" style="margin-left:10px;">删除</el-button>
+          </el-popover>
+
+
         </template>
       </el-table-column>
     </el-table>
@@ -48,7 +60,7 @@
 </template>
   
 <script>
-import { getList } from '@/api/table'
+import { getList, deleteTeacher, updateTeacher } from '@/api/table'
 
 export default {
   name: 'Table',
@@ -75,10 +87,15 @@ export default {
     return {
       listLoading: true,
       search: null,
+      tableHeight: 0
     }
   },
   created() {
     this.fetchData()
+  },
+  mounted() {
+    //减去翻页的高度，因为容器包含了表格和翻页
+    this.tableHeight = this.$refs.tableBox.clientHeight;
   },
   methods: {
     fetchData() {
@@ -88,14 +105,13 @@ export default {
         this.listLoading = false
       })
     },
-    updateList(list) {
-      this.list = list;
-    },
-    handleEdit(index, row) {
+    handleUpdate(index, row) {
       console.log(index, row)
     },
     handleDelete(index, row) {
-      console.log(index, row)
+      // console.log(index, row)
+      console.log(row.id)
+
     },
     filterSex(value, row) {
       return row.sex === value
@@ -121,10 +137,17 @@ export default {
   watch: {
     list(newValue) {
       // 数据更新时调用updateData方法更新表格数据
-      this.updateList(newValue);
+      // this.updateList(newValue);
+      this.list = newValue
     }
   }
 
 }
 </script>
   
+<style>
+.table-box {
+  height: calc(100vh - 190px);
+  /*示例中顶部区域固定高度190px*/
+}
+</style>
