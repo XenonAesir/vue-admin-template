@@ -83,7 +83,7 @@ export default {
             if (this.submitHandler) {
                 if (this.needValidForm) {
                     // 使用验证规则
-                    if (this.validForm('form')) {
+                    if (this.validForm()) {
                         this.submitHandler(this.form)
                     }
                 } else {
@@ -100,14 +100,13 @@ export default {
             this.dialogFormVisible = false
         },
         validForm() {
+            let isValid = false
             this.$refs.form.validate((valid) => {
                 if (valid) {
-                    // alert('submit!');
-                    return true
-                } else {
-                    return false
+                    isValid = true
                 }
             })
+            return isValid
         },
         resetForm() {
             this.$refs.form.resetFields();
