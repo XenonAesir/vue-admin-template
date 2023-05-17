@@ -3,8 +3,7 @@
     <!-- <el-button @click="clearFilter">清除所有过滤器</el-button> -->
     <el-table v-loading="listLoading" :data="localList.filter(data => !search || data.name.includes(search))"
       element-loading-text="Loading" border fit highlight-current-row :default-sort="{ prop: 'name', order: 'ascending' }"
-      v-if="tableHeight" :max-height="tableHeight + 'px'"
-      ref="filterTable">
+      v-if="tableHeight" :max-height="tableHeight + 'px'" ref="filterTable">
       <el-table-column prop="ID" align="center" label="序号" width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
@@ -38,7 +37,7 @@
       </el-table-column>
       <el-table-column align="right" width="400">
         <template slot="header" slot-scope="scope">
-          <el-input v-model="search" label="操作列表" size="mini" placeholder="输入姓名当页搜索"/>
+          <el-input v-model="search" label="操作列表" size="mini" placeholder="输入姓名当页搜索" />
         </template>
         <template slot-scope="scope">
           <el-button plain size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
@@ -46,8 +45,7 @@
           <el-popover placement="top" width="160" :ref="`popover1-${scope.$index}`">
             <p>确定删除此条信息吗</p>
             <div style="text-align: right; margin: 0">
-              <el-button plain size="mini"
-                @click="scope._self.$refs[`popover1-${scope.$index}`].doClose()">取消</el-button>
+              <el-button plain size="mini" @click="scope._self.$refs[`popover1-${scope.$index}`].doClose()">取消</el-button>
               <el-button plain type="primary" size="mini"
                 @click="scope._self.$refs[`popover1-${scope.$index}`].doClose(), handleDelete(scope.$index, scope.row)">确定</el-button>
             </div>
@@ -66,6 +64,7 @@
 <script>
 import { getList, deleteTeacher, updateTeacher } from '@/api/table'
 import Dialog from '@/components/CRUD/dialog.vue'
+import { ro } from 'element-plus/es/locale'
 
 export default {
   name: 'Table',
@@ -106,7 +105,8 @@ export default {
       search: null,
       tableHeight: 0,
       localList: [], // 新增本地的 data 属性
-      updateDialogTitle: '更新信息'
+      updateDialogTitle: '更新信息',
+      currentEditRow: null
     }
   },
   created() {
@@ -127,10 +127,25 @@ export default {
     handleUpdate(index, row) {
       // console.log(index, row)
       this.$refs.updateDialog.doOpen()
+      this.currentEditRow = row
     },
-    updateTeacher() {
-      this.updateDialog(formData).then(response => {
+    updateTeacher(formData) {
+      let teacher = {
+        id: this.currentEditRow.id,
+        name: formData.name,
+        sex: formData.sex,
+        age: formData.age,
+        major: formData.major
+      }
 
+      console.log(teacher)
+
+      updateTeacher(teacher).then(response => {
+        this.$message({
+          message: '成功更新了' + this.currentEditRow.major + '教师' + this.currentEditRow.name + '的信息',
+          type: 'success'
+        })
+        this.fetchData()
       })
     },
     handleDelete(index, row) {
