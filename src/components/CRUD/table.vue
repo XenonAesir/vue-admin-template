@@ -57,14 +57,13 @@
       </el-table-column>
     </el-table>
     <Dialog ref="updateDialog" :title="updateDialogTitle" :submitHandler="updateTeacher" :needValidForm="true"
-      :rules="rules"></Dialog>
+      :rules="rules" :defaultFormData="currentEditRow"></Dialog>
   </div>
 </template>
   
 <script>
 import { getList, deleteTeacher, updateTeacher } from '@/api/table'
 import Dialog from '@/components/CRUD/dialog.vue'
-import { ro } from 'element-plus/es/locale'
 
 export default {
   name: 'Table',
@@ -132,10 +131,7 @@ export default {
     updateTeacher(formData) {
       let teacher = {
         id: this.currentEditRow.id,
-        name: formData.name,
-        sex: formData.sex,
-        age: formData.age,
-        major: formData.major
+        ...formData
       }
 
       console.log(teacher)
@@ -146,10 +142,11 @@ export default {
           type: 'success'
         })
         this.fetchData()
+        this.$refs.updateDialog.doClose()
       })
     },
     handleDelete(index, row) {
-      deleteTeacher(row).then(response => {
+      deleteTeacher(row.id).then(response => {
         this.$message({
           message: '成功删除了' + row.major + '教师' + row.name + '的信息',
           type: 'success'

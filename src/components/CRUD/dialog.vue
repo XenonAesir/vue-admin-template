@@ -1,9 +1,9 @@
 <template>
     <div>
         <el-dialog :title="title" :visible.sync="dialogFormVisible">
-            <el-form ref="form" :model="form" label-width="80px" :rules="rules">
+            <el-form ref="form" :model="form" label-width="80px" :rules="rules" >
                 <el-form-item label="教师姓名" prop="name">
-                    <el-input v-model.trim="form.name" autocomplete="off"></el-input>
+                    <el-input v-model.trim="form.name" autocomplete="off" ></el-input>
                 </el-form-item>
 
                 <el-form-item label="教师性别" prop="sex">
@@ -63,6 +63,10 @@ export default {
         rules: {
             type: Object,
             default: null
+        },
+        defaultFormData: {
+            type: Object,
+            default: null
         }
     },
     data() {
@@ -91,7 +95,6 @@ export default {
                     this.submitHandler(this.form);
                 }
             }
-            // 其他处理逻辑...
         },
         doOpen() {
             this.dialogFormVisible = true
@@ -109,9 +112,14 @@ export default {
             return isValid
         },
         resetForm() {
-            this.$refs.form.resetFields();
+            // this.$refs.form.resetFields();
+            this.form = { ...this.defaultFormData }
         }
     },
-
+    watch: {
+        defaultFormData(newValue) {
+            this.form = newValue
+        }
+    },
 }
 </script>
