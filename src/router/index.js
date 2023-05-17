@@ -44,29 +44,28 @@ export const constantRoutes = [
   },
 
   {
-    path: '/dashboard',
+    path: '/',
     component: Layout,
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: '欢迎',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '欢迎', icon: 'dashboard' }
     }]
   },
 
   {
-    path: '/',
+    path: '/table',
     component: Layout,
     redirect: '/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
+
     children: [
       {
         path: 'table',
-        name: 'Table',
+        name: '数据表格',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        meta: { title: '数据表格', icon: 'table' }
       },
       // {
       //   path: 'tree',
@@ -154,8 +153,8 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'https://github.com/XenonAesir/vue-admin-template',
+        meta: { title: '外部链接', icon: 'link' }
       }
     ]
   },
