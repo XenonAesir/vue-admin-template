@@ -35,8 +35,8 @@
             </el-form>
 
             <div slot="footer" class="dialog-footer">
-                <el-button plain @click="setUnVisable(), resetForm('form')" size="medium">取 消</el-button>
-                <el-button plain type="info" @click="resetForm('form')" size="medium">重 置</el-button>
+                <el-button plain @click="setUnVisible(), resetForm()" size="medium">取 消</el-button>
+                <el-button plain type="info" @click="resetForm()" size="medium">重 置</el-button>
                 <el-button plain type="primary" @click="onSubmit" size="medium">提 交</el-button>
             </div>
         </el-dialog>
@@ -93,14 +93,14 @@ export default {
             }
             // 其他处理逻辑...
         },
-        setVisable() {
+        setVisible() {
             this.dialogFormVisible = true
         },
-        setUnVisable() {
+        setUnVisible() {
             this.dialogFormVisible = false
         },
-        validForm(formName) {
-            this.$refs[formName].validate((valid) => {
+        validForm() {
+            this.$refs.form.validate((valid) => {
                 if (valid) {
                     // alert('submit!');
                     return true
@@ -109,8 +109,8 @@ export default {
                 }
             })
         },
-        resetForm(formName) {
-            this.$refs[formName].resetFields();
+        resetForm() {
+            this.$refs.form.resetFields();
         }
     },
 

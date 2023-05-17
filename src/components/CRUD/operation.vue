@@ -17,40 +17,30 @@ export default {
   components: {
     Dialog
   },
+  props :{
+    rules: {
+      type: Object,
+      default: null
+    }
+  },
   data() {
     return {
       insertDialogTitle: '添加教师',
       queryDialogTitle: '查询教师',
-      rules: {
-        name: [
-          { required: true, message: '请输入教师姓名', trigger: 'blur' },
-          { min: 2, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        sex: [
-          { required: true, message: '请选择教师性别', trigger: 'change' }
-        ],
-        age: [
-          { required: true, message: '请输入教师年龄', trigger: 'blur' },
-          { type: 'number', message: '年龄必须为数字值' }
-        ],
-        major: [
-          { required: true, message: '请选择所授科目', trigger: 'change' }
-        ],
-      }
     }
   },
   methods: {
     openInsertTeacherDialog() {
-      this.$refs.insertDialog.setVisable();
+      this.$refs.insertDialog.setVisible();
     },
     openQueryTeacherDialog() {
-      this.$refs.queryDialog.setVisable();
+      this.$refs.queryDialog.setVisible();
     },
     closeInsertTeacherDialog() {
-      this.$refs.insertDialog.setUnVisable();
+      this.$refs.insertDialog.setUnVisible();
     },
     closeQueryTeacherDialog() {
-      this.$refs.queryDialog.setUnVisable();
+      this.$refs.queryDialog.setUnVisible();
     },
     insertTeacher(formData) {
       insertTeacher(formData).then(response => {

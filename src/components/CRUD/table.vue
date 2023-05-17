@@ -58,6 +58,8 @@
         </template>
       </el-table-column>
     </el-table>
+    <Dialog ref="updateDialog" :title="updateDialogTitle" :submitHandler="updateTeacher" :needValidForm="true"
+      :rules="rules"></Dialog>
   </div>
 </template>
   
@@ -66,7 +68,16 @@ import { getList, deleteTeacher, updateTeacher } from '@/api/table'
 
 export default {
   name: 'Table',
-  props: ['list'],
+  props: {
+    list: {
+      type: Array,
+      default: null
+    },
+    rules: {
+      type: Object,
+      default: null
+    }
+  },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -90,7 +101,8 @@ export default {
       listLoading: true,
       search: null,
       tableHeight: 0,
-      localList: [] // 新增本地的 data 属性
+      localList: [], // 新增本地的 data 属性
+      updateDialog: '更新信息'
     }
   },
   created() {
@@ -110,6 +122,11 @@ export default {
     },
     handleUpdate(index, row) {
       console.log(index, row)
+    },
+    updateTeacher() {
+      this.updateDialog(formData).then(response => {
+
+      })
     },
     handleDelete(index, row) {
       deleteTeacher(row).then(response => {
