@@ -31,16 +31,16 @@ export default {
   },
   methods: {
     openInsertTeacherDialog() {
-      this.$refs.insertDialog.setVisible();
+      this.$refs.insertDialog.doOpen();
     },
     openQueryTeacherDialog() {
-      this.$refs.queryDialog.setVisible();
+      this.$refs.queryDialog.doOpen();
     },
     closeInsertTeacherDialog() {
-      this.$refs.insertDialog.setUnVisible();
+      this.$refs.insertDialog.doClose();
     },
     closeQueryTeacherDialog() {
-      this.$refs.queryDialog.setUnVisible();
+      this.$refs.queryDialog.doClose();
     },
     insertTeacher(formData) {
       insertTeacher(formData).then(response => {

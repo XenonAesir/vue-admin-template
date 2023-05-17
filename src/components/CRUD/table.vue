@@ -65,9 +65,13 @@
   
 <script>
 import { getList, deleteTeacher, updateTeacher } from '@/api/table'
+import Dialog from '@/components/CRUD/dialog.vue'
 
 export default {
   name: 'Table',
+  components: {
+    Dialog
+  },
   props: {
     list: {
       type: Array,
@@ -102,7 +106,7 @@ export default {
       search: null,
       tableHeight: 0,
       localList: [], // 新增本地的 data 属性
-      updateDialog: '更新信息'
+      updateDialogTitle: '更新信息'
     }
   },
   created() {
@@ -121,7 +125,8 @@ export default {
       })
     },
     handleUpdate(index, row) {
-      console.log(index, row)
+      // console.log(index, row)
+      this.$refs.updateDialog.doOpen()
     },
     updateTeacher() {
       this.updateDialog(formData).then(response => {

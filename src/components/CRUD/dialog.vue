@@ -35,7 +35,7 @@
             </el-form>
 
             <div slot="footer" class="dialog-footer">
-                <el-button plain @click="setUnVisible(), resetForm()" size="medium">取 消</el-button>
+                <el-button plain @click="doClose(), resetForm()" size="medium">取 消</el-button>
                 <el-button plain type="info" @click="resetForm()" size="medium">重 置</el-button>
                 <el-button plain type="primary" @click="onSubmit" size="medium">提 交</el-button>
             </div>
@@ -93,10 +93,10 @@ export default {
             }
             // 其他处理逻辑...
         },
-        setVisible() {
+        doOpen() {
             this.dialogFormVisible = true
         },
-        setUnVisible() {
+        doClose() {
             this.dialogFormVisible = false
         },
         validForm() {
